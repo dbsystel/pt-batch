@@ -27,7 +27,6 @@ public class LocationTest {
     @Test
     public void findsUniversitaetsklinikumbyCoordinates() throws IOException {
         final NetworkProvider networkProvider = new BahnProvider();
-//        113311,Burgstr.,49.434352,8.682286,,0
         final NearbyLocationsResult locationsResult = networkProvider.queryNearbyLocations(EnumSet.of(LocationType.STATION),
                         new Location(LocationType.COORD, null, 49493571,8483875), 100, 10);
         assertEquals(NearbyLocationsResult.Status.OK, locationsResult.status);
