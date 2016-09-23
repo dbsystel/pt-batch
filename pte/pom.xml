@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.hisrc.ptbatch</groupId>
+	<artifactId>pt-batch-pte</artifactId>
+	<packaging>jar</packaging>
+	<name>Public Transport Batch - PTE</name>
+	<parent>
+		<groupId>org.hisrc.ptbatch</groupId>
+		<artifactId>pt-batch-project</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>org.hisrc.ptbatch</groupId>
+			<artifactId>pt-batch-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.schildbach.pte</groupId>
+			<artifactId>public-transport-enabler</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.kxml</groupId>
+			<artifactId>kxml2</artifactId>
+		</dependency>
+	</dependencies>
+</project>
