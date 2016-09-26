@@ -1,10 +1,11 @@
-package org.hisrc.ptbatch.pte.service;
+package org.hisrc.ptbatch.service;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.Collection;
 
+import org.hisrc.ptbatch.service.GtfsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.onebusaway.gtfs.model.Stop;

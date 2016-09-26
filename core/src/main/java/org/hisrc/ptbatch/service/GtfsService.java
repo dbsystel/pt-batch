@@ -1,4 +1,4 @@
-package org.hisrc.ptbatch.pte.service;
+package org.hisrc.ptbatch.service;
 
 import java.io.File;
 import java.io.IOException;
