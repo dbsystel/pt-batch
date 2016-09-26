@@ -8,7 +8,7 @@ public class GenerateStopLocationMappingsRun {
         
         final String[] arguments = new String[]{
                         "-g", "files/rnv.zip",
-                        "-csv", "files/rnv-stop-location-mappings.csv"
+                        "-slm-csv", "files/rnv-stop-location-mappings.csv"
         };
         GenerateStopLocationMappings.main(arguments);
     }

@@ -35,8 +35,8 @@ public class QueryDescriptionCsvWriterTest {
             queryDescriptionCsvWriter.write(queryDescriptions, os);
         }
         final String result = sw.toString();
-         System.out.println(result);
-        assertEquals(230, result.length());
+        // System.out.println(result);
+        assertEquals(122, result.length());
     }
 
 }

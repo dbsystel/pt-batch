@@ -1,0 +1,1 @@
+java -cp ../target/pt-batch-pte-1.0.0-SNAPSHOT.jar org.hisrc.ptbatch.pte.app.GenerateStopLocationMappings -g rnv.zip -slm-csv rnv-stop-location-mappings.csv

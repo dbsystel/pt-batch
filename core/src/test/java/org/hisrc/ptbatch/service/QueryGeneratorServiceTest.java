@@ -25,7 +25,7 @@ public class QueryGeneratorServiceTest {
     public void generatesQueries() {
         final List<QueryDescription> generatedQueryDescriptions = queryGenerator
                         .generateQueries(10, LocalDate.now(), LocalDate.now().plusMonths(1));
-        assertEquals(10, generatedQueryDescriptions);
+        assertEquals(10, generatedQueryDescriptions.size());
     }
 
 }

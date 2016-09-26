@@ -40,8 +40,10 @@ public class StopLocationMappingCsvTest {
         final StopLocationMapping mapping = new StopLocationMapping(
                         new StopDescription("554412", "Universitätsklinikum", 8.48448, 49.49388),
                         new Location(LocationType.STATION, "508144", 49493690, 8484109, "Mannheim",
-                                        "Universitätsklinikum", new HashSet<Product>(
-                                                        Arrays.asList(Product.TRAM, Product.BUS))), 100);
+                                        "Universitätsklinikum",
+                                        new HashSet<Product>(
+                                                        Arrays.asList(Product.TRAM, Product.BUS))),
+                        100);
         final List<StopLocationMapping> originalMappings = Arrays.asList(mapping);
         final StringWriter sw = new StringWriter();
         try (OutputStream os = new WriterOutputStream(sw)) {
@@ -49,7 +51,7 @@ public class StopLocationMappingCsvTest {
         }
         final String result = sw.toString();
         // System.out.println(result);
-        assertEquals(251, result.length());
+        assertEquals(264, result.length());
         final List<StopLocationMapping> readMappings;
         try (InputStream is = new ReaderInputStream(new StringReader(result))) {
             readMappings = reader.read(is);
