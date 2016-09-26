@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-import org.hisrc.ptbatch.dto.QueryDescriptionDto;
 import org.hisrc.ptbatch.model.QueryDescription;
+import org.hisrc.ptbatch.model.QueryDescriptionDto;
 
 import com.fasterxml.jackson.databind.SequenceWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;

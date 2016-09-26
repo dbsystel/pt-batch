@@ -9,12 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class QueryDescription {
 
     private LocalDateTime dateTime;
-    private Location from;
-    private Location to;
+    private StopDescription from;
+    private StopDescription to;
 
     @JsonCreator
     public QueryDescription(@JsonProperty("dateTime") LocalDateTime dateTime,
-                    @JsonProperty("from") Location from, @JsonProperty("to") Location to) {
+                    @JsonProperty("from") StopDescription from, @JsonProperty("to") StopDescription to) {
         this.dateTime = dateTime;
         this.from = from;
         this.to = to;
@@ -24,11 +24,11 @@ public class QueryDescription {
         return dateTime;
     }
 
-    public Location getFrom() {
+    public StopDescription getFrom() {
         return from;
     }
 
-    public Location getTo() {
+    public StopDescription getTo() {
         return to;
     }
 

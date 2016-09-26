@@ -5,25 +5,25 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.util.Collection;
 
-import org.hisrc.ptbatch.service.GtfsService;
+import org.hisrc.ptbatch.service.GtfsReader;
 import org.junit.Before;
 import org.junit.Test;
 import org.onebusaway.gtfs.model.Stop;
 
-public class GtfsServiceTest {
+public class GtfsReaderTest {
 
     private File gtfsFile;
-    private GtfsService gtfsService;
+    private GtfsReader gtfsReader;
 
     @Before
     public void setUp() {
         gtfsFile = new File("files/rnv.zip");
-        gtfsService = new GtfsService(gtfsFile);
+        gtfsReader = new GtfsReader(gtfsFile);
     }
 
     @Test
     public void testStops() {
-        Collection<Stop> stops = gtfsService.getStops();
+        Collection<Stop> stops = gtfsReader.getStops();
         assertEquals(2070, stops.size());
     }
 

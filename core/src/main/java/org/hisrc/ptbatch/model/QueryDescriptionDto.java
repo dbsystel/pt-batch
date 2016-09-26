@@ -1,8 +1,6 @@
-package org.hisrc.ptbatch.dto;
+package org.hisrc.ptbatch.model;
 
 import java.time.LocalDateTime;
-
-import org.hisrc.ptbatch.model.QueryDescription;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;

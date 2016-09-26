@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.output.WriterOutputStream;
-import org.hisrc.ptbatch.model.Location;
+import org.hisrc.ptbatch.model.StopDescription;
 import org.hisrc.ptbatch.model.QueryDescription;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +30,8 @@ public class QueryDescriptionJsonWriterTest {
         try (final OutputStream os = new WriterOutputStream(sw)) {
             final List<QueryDescription> queryDescriptions = Collections.singletonList(
                             new QueryDescription(LocalDateTime.of(2016, 9, 26, 10, 15, 0),
-                                            new Location("a", "A", 10, 20),
-                                            new Location("b", "B", 30, 40)));
+                                            new StopDescription("a", "A", 10, 20),
+                                            new StopDescription("b", "B", 30, 40)));
             queryDescriptionJsonWriter.write(queryDescriptions, os);
         }
         final String result = sw.toString();

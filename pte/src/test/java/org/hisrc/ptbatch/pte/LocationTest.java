@@ -32,6 +32,32 @@ public class LocationTest {
         assertEquals(NearbyLocationsResult.Status.OK, locationsResult.status);
     }
     
+    @Test
+    public void findsKirchheimRathaus() throws IOException {
+        final NetworkProvider networkProvider = new BahnProvider();
+        final NearbyLocationsResult result50 = networkProvider.queryNearbyLocations(EnumSet.of(LocationType.STATION),
+                        new Location(LocationType.COORD, null, 
+                                        49377686, 8666235), 50, 10);
+        final NearbyLocationsResult result100 = networkProvider.queryNearbyLocations(EnumSet.of(LocationType.STATION),
+                        new Location(LocationType.COORD, null, 
+                                        49377686, 8666235), 100, 10);
+        assertEquals(0, result50.locations.size());
+        assertEquals(1, result100.locations.size());
+    }
+    
+    @Test
+    public void findsEbertpark() throws IOException {
+        final NetworkProvider networkProvider = new BahnProvider();
+        final NearbyLocationsResult result50 = networkProvider.queryNearbyLocations(EnumSet.of(LocationType.STATION),
+                        new Location(LocationType.COORD, null, 
+                                        49489925, 8417615), 50, 10);
+        final NearbyLocationsResult result100 = networkProvider.queryNearbyLocations(EnumSet.of(LocationType.STATION),
+                        new Location(LocationType.COORD, null, 
+                                        49489925, 8417615), 1000, 10);
+        assertEquals(0, result50.locations.size());
+        assertEquals(1, result100.locations.size());
+    }
+    
     
 //    @Test
 //    public void findsBurgstrByName() throws IOException {

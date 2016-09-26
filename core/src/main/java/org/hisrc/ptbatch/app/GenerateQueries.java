@@ -8,10 +8,10 @@ import java.util.List;
 
 import org.hisrc.ptbatch.args4j.spi.LocalDateOptionHandler;
 import org.hisrc.ptbatch.model.QueryDescription;
-import org.hisrc.ptbatch.service.GtfsService;
+import org.hisrc.ptbatch.service.GtfsReader;
 import org.hisrc.ptbatch.service.QueryDescriptionCsvWriter;
 import org.hisrc.ptbatch.service.QueryDescriptionJsonWriter;
-import org.hisrc.ptbatch.service.QueryGeneratorService;
+import org.hisrc.ptbatch.service.QueryGenerator;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -84,24 +84,28 @@ public class GenerateQueries {
             if (configuration.isHelp()) {
                 printUsage(parser);
             } else {
-                final GtfsService gtfsReader = new GtfsService(configuration.getGtfsFile());
-                final QueryGeneratorService queryGenerator = new QueryGeneratorService(gtfsReader);
-                final List<QueryDescription> queryDescriptions = queryGenerator.generateQueries(
-                                configuration.getCount(), configuration.getStartDate(),
-                                configuration.getEndDate());
-
-                if (configuration.getJsonFile() != null) {
-                    new QueryDescriptionJsonWriter().write(queryDescriptions,
-                                    configuration.getJsonFile());
-                }
-                if (configuration.getCsvFile() != null) {
-                    new QueryDescriptionCsvWriter().write(queryDescriptions,
-                                    configuration.getCsvFile());
-                }
+                execute(configuration);
             }
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             printUsage(parser);
+        }
+    }
+
+    private static void execute(final Configuration configuration) throws IOException {
+        final GtfsReader gtfsReader = new GtfsReader(configuration.getGtfsFile());
+        final QueryGenerator queryGenerator = new QueryGenerator(gtfsReader);
+        final List<QueryDescription> queryDescriptions = queryGenerator.generateQueries(
+                        configuration.getCount(), configuration.getStartDate(),
+                        configuration.getEndDate());
+
+        if (configuration.getJsonFile() != null) {
+            new QueryDescriptionJsonWriter().write(queryDescriptions,
+                            configuration.getJsonFile());
+        }
+        if (configuration.getCsvFile() != null) {
+            new QueryDescriptionCsvWriter().write(queryDescriptions,
+                            configuration.getCsvFile());
         }
     }
 

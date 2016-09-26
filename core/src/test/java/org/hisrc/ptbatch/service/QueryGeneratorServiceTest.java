@@ -13,17 +13,17 @@ import org.junit.Test;
 public class QueryGeneratorServiceTest {
 
     private File gtfsFile;
-    private QueryGeneratorService queryGeneratorService;
+    private QueryGenerator queryGenerator;
 
     @Before
     public void setUp() {
         gtfsFile = new File("files/rnv.zip");
-        queryGeneratorService = new QueryGeneratorService(new GtfsService(gtfsFile));
+        queryGenerator = new QueryGenerator(new GtfsReader(gtfsFile));
     }
 
     @Test
     public void generatesQueries() {
-        final List<QueryDescription> generatedQueryDescriptions = queryGeneratorService
+        final List<QueryDescription> generatedQueryDescriptions = queryGenerator
                         .generateQueries(10, LocalDate.now(), LocalDate.now().plusMonths(1));
         assertEquals(10, generatedQueryDescriptions);
     }

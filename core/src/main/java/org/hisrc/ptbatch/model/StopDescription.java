@@ -7,7 +7,7 @@ import org.onebusaway.gtfs.model.Stop;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Location {
+public class StopDescription {
 
     private String id;
     private String name;
@@ -15,7 +15,7 @@ public class Location {
     private double lat;
 
     @JsonCreator
-    public Location(@JsonProperty("id") String id, @JsonProperty("name") String name,
+    public StopDescription(@JsonProperty("id") String id, @JsonProperty("name") String name,
                     @JsonProperty("lon") double lon, @JsonProperty("lat") double lat) {
         this.id = id;
         this.name = name;
@@ -41,7 +41,7 @@ public class Location {
 
     @Override
     public String toString() {
-        return "Location [id=" + id + ", name=" + name + ", lon=" + lon + ", lat=" + lat + "]";
+        return "StopDescription [id=" + id + ", name=" + name + ", lon=" + lon + ", lat=" + lat + "]";
     }
 
     @Override
@@ -57,14 +57,14 @@ public class Location {
             return false;
         if (getClass() != object.getClass())
             return false;
-        final Location that = (Location) object;
+        final StopDescription that = (StopDescription) object;
         return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name)
                         && Double.doubleToLongBits(this.lon) == Double.doubleToLongBits(that.lon)
                         && Double.doubleToLongBits(this.lat) == Double.doubleToLongBits(that.lat);
     }
 
-    public static Location of(Stop stop) {
-        return new Location(stop.getId().getId(), stop.getName(), stop.getLon(), stop.getLat());
+    public static StopDescription of(Stop stop) {
+        return new StopDescription(stop.getId().getId(), stop.getName(), stop.getLon(), stop.getLat());
     }
 
 }
