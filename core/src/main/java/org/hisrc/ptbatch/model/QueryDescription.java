@@ -3,21 +3,40 @@ package org.hisrc.ptbatch.model;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class QueryDescription {
 
+    private String id;
     private LocalDateTime dateTime;
     private StopDescription from;
     private StopDescription to;
 
-    @JsonCreator
     public QueryDescription(@JsonProperty("dateTime") LocalDateTime dateTime,
-                    @JsonProperty("from") StopDescription from, @JsonProperty("to") StopDescription to) {
+                    @JsonProperty("from") StopDescription from,
+                    @JsonProperty("to") StopDescription to) {
+        this.id = StringUtils.leftPad(Integer.toHexString(Objects.hash(dateTime, from, to)), 8, '0');
         this.dateTime = dateTime;
         this.from = from;
         this.to = to;
+    }
+
+    @JsonCreator
+    public QueryDescription(@JsonProperty("id") String id,
+                    @JsonProperty("dateTime") LocalDateTime dateTime,
+                    @JsonProperty("from") StopDescription from,
+                    @JsonProperty("to") StopDescription to) {
+        this.id = id;
+        this.dateTime = dateTime;
+        this.from = from;
+        this.to = to;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public LocalDateTime getDateTime() {
@@ -34,12 +53,13 @@ public class QueryDescription {
 
     @Override
     public int hashCode() {
-        return Objects.hash(dateTime, from, to);
+        return Objects.hash(id, dateTime, from, to);
     }
 
     @Override
     public String toString() {
-        return "QueryDescription [dateTime=" + dateTime + ", from=" + from + ", to=" + to + "]";
+        return "QueryDescription [id=" + id + ", dateTime=" + dateTime + ", from=" + from + ", to="
+                        + to + "]";
     }
 
     @Override
@@ -51,8 +71,15 @@ public class QueryDescription {
         if (getClass() != object.getClass())
             return false;
         final QueryDescription that = (QueryDescription) object;
-        return Objects.equals(this.dateTime, that.dateTime) && Objects.equals(this.from, that.from)
-                        && Objects.equals(this.to, that.to);
+        return Objects.equals(this.id, that.id) && Objects.equals(this.dateTime, that.dateTime)
+                        && Objects.equals(this.from, that.from) && Objects.equals(this.to, that.to);
     }
 
+    public static QueryDescription of(QueryDescriptionDto dto) {
+        return new QueryDescription(dto.getDateTime(),
+                        new StopDescription(dto.getFromId(), dto.getFromName(), dto.getFromLon(),
+                                        dto.getFromLat()),
+                        new StopDescription(dto.getToId(), dto.getToName(), dto.getToLon(),
+                                        dto.getToLat()));
+    }
 }

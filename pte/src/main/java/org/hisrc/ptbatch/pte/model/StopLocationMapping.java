@@ -34,7 +34,7 @@ public class StopLocationMapping {
     public Location getLocation() {
         return location;
     }
-    
+
     public int getDistance() {
         return distance;
     }
@@ -53,7 +53,8 @@ public class StopLocationMapping {
         if (getClass() != object.getClass())
             return false;
         StopLocationMapping that = (StopLocationMapping) object;
-        return Objects.equals(this.stop, that.stop) && Objects.equals(this.location, that.location) && Objects.equals(this.distance, that.distance);
+        return Objects.equals(this.stop, that.stop) && Objects.equals(this.location, that.location)
+                        && Objects.equals(this.distance, that.distance);
     }
 
     public static StopLocationMapping of(StopLocationMappingDto dto) {
@@ -64,8 +65,8 @@ public class StopLocationMapping {
                                         dto.getLocationLat(), dto.getLocationLon(),
                                         dto.getLocationPlace(), dto.getLocationName(),
                                         dto.getLocationProducts() == null ? null
-                                                        : new HashSet<Product>(Arrays.asList(dto
-                                                                        .getLocationProducts()))),
+                                                        : new HashSet<Product>(Arrays
+                                                                        .asList(dto.getLocationProducts()))),
                         dto.getDistance());
     }
 }

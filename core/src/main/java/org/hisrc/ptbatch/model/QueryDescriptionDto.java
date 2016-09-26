@@ -7,10 +7,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({ "date_time", "from_id", "from_name", "from_lon", "from_lat", "to_id", "to_name",
+@JsonPropertyOrder({ "id", "date_time", "from_id", "from_name", "from_lon", "from_lat", "to_id", "to_name",
                 "to_lon", "to_lat" })
 public class QueryDescriptionDto {
-
+    
+    @JsonProperty("id")
+    private final String id;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @JsonProperty("date_time")
     private final LocalDateTime dateTime;
@@ -32,7 +34,9 @@ public class QueryDescriptionDto {
     private final double toLat;
 
     @JsonCreator
-    public QueryDescriptionDto(@JsonProperty("date_time") LocalDateTime dateTime,
+    public QueryDescriptionDto(
+                    @JsonProperty("id") String id,
+                    @JsonProperty("date_time") LocalDateTime dateTime,
                     @JsonProperty("from_id") String fromId,
                     @JsonProperty("from_name") String fromName,
                     @JsonProperty("from_lon") double fromLon,
@@ -41,6 +45,7 @@ public class QueryDescriptionDto {
                     @JsonProperty("to_name") String toName,
                     @JsonProperty("to_lon") double toLon,
                     @JsonProperty("to_lat") double toLat) {
+        this.id = id;
         this.dateTime = dateTime;
         this.fromId = fromId;
         this.fromName = fromName;
@@ -50,6 +55,10 @@ public class QueryDescriptionDto {
         this.toName = toName;
         this.toLon = toLon;
         this.toLat = toLat;
+    }
+    
+    public String getId() {
+        return id;
     }
 
     public LocalDateTime getDateTime() {
@@ -89,7 +98,9 @@ public class QueryDescriptionDto {
     }
 
     public static QueryDescriptionDto of(QueryDescription queryDescription) {
-        return new QueryDescriptionDto(queryDescription.getDateTime(),
+        return new QueryDescriptionDto(
+                        queryDescription.getId(),
+                        queryDescription.getDateTime(),
                         queryDescription.getFrom().getId(), queryDescription.getFrom().getName(),
                         queryDescription.getFrom().getLon(), queryDescription.getFrom().getLat(),
                         queryDescription.getTo().getId(), queryDescription.getTo().getName(),

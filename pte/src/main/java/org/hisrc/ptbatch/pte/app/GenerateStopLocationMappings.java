@@ -88,7 +88,7 @@ public class GenerateStopLocationMappings {
                                 .map(stopDescription -> {
                                     try {
                                         final StopLocationMapping mapping = providerService
-                                                        .resolveStop(stopDescription);
+                                                        .resolveStopLocationMapping(stopDescription);
                                         if (mapping == null) {
                                             LOGGER.warn("Could not find location for the stop [{}].",
                                                             stopDescription);

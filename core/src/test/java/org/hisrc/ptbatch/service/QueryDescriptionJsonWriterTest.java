@@ -36,7 +36,7 @@ public class QueryDescriptionJsonWriterTest {
         }
         final String result = sw.toString();
         // System.out.println(result);
-        assertEquals(230, result.length());
+        assertEquals(252, result.length());
     }
 
 }

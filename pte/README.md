@@ -64,15 +64,43 @@ java -cp target/pt-batch-pte-1.0.0-SNAPSHOT.jar org.hisrc.ptbatch.pte.app.Genera
 This generates a timestamp/from stop/to stop tuples like:
 
 ```
-date_time,from_id,from_name,from_lon,from_lat,to_id,to_name,to_lon,to_lat
-2016-10-01T00:33:00,604106,"MA Rathaus/REM",8.463582,49.489551,211206,Heinrich-Ries-Halle,8.426591,49.487647
-
+id,date_time,from_id,from_name,from_lon,from_lat,to_id,to_name,to_lon,to_lat
+9eca438d,2016-10-01T02:02:00,555302,Schönau,8.47426,49.54725,600405,"Mensaam Schloss",8.4592,49.48657
+a5b0ee21,2016-10-01T04:32:00,248805,Freiheitsplatz,8.479514,49.45958,555605,"Sonderburger Straße",8.481173,49.536203
+...
 ```
 
 Stops are taken from the stop/location mapping file.
 The tool only uses mappings with distance between the stop and the location <= 50m.
 Timestamp is chosen randomly between the start and the end date, rounded to whole minutes.
 Pair of stops are chosen at random, it is guaranteed that from and to stops are not the same.
+
+## Execute queries
+
+To execute queries, run:
+
+```
+java -cp ../target/pt-batch-pte-<VERSION>.jar org.hisrc.ptbatch.pte.app.ExecuteQueries -slm-csv <STOP_LOCATION_MAPPINGS_CSV_FILE> -q-csv <QUERIES_CSV_FILE> -t-csv <TRIPS_CSV_FILE> -t-json <TRIPS_JSON_DIRECTORY>
+```
+
+For example:
+
+```
+java -cp ../target/pt-batch-pte-1.0.0-SNAPSHOT.jar org.hisrc.ptbatch.pte.app.ExecuteQueries -slm-csv files/rnv-stop-location-mappings.csv -q-csv files/rnv-queries.csv -t-csv files/rnv-trips.csv -t-json files/trips
+```
+
+This will execute queries agains the PTE provider and write results to the CSV file as well as JSON files in the specified directory.
+
+Example of the CSV file:
+
+```
+query_id,query_date_time,query_from_id,query_from_name,query_from_lon,query_from_lat,query_to_id,query_to_name,query_to_lon,query_to_lat,"trip_first_departure_date_time","trip_last_arrival_date_time",trip_legs_count
+9eca438d,2016-10-01T02:02:00,555302,Schönau,8.47426,49.54725,600405,"Mensaam Schloss",8.4592,49.48657,2016-10-01T02:37:00,2016-10-01T03:46:00,3
+a5b0ee21,2016-10-01T04:32:00,248805,Freiheitsplatz,8.479514,49.45958,555605,"Sonderburger Straße",8.481173,49.536203,2016-10-01T08:15:00,2016-10-01T09:04:00,3
+```
+
+The CSV file only contains first departure timestamp, last arrival timestamp and number of legs.
+If PTE provider returns several possible trips, the tool selects the trip with the earliest last arrival.
 
 # Building the tool
 

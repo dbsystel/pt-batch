@@ -399,6 +399,7 @@ stop_id,stop_name,stop_lon,stop_lat,location_type,location_id,location_lon,locat
 411812,Händelstraße,8.65638,49.54892,STATION,510438,8655965,49548838,Weinheim,Händelstraße,TRAM;BUS;ON_DEMAND,50
 263002,Waldstraße,8.4894,49.52853,STATION,518581,8489296,49529017,Mannheim,"Waldhof Waldstraße",TRAM;BUS,100
 328405,Nachtweide,8.405202,49.541306,STATION,508476,8405265,49540964,"Ludwigshafen am Rhein",Nachtweide,BUS,50
+217106,"Oppau Gemeindehaus",8.403949,49.521716,STATION,508976,8404141,49521601,"Ludwigshafen am Rhein","Oppau Gemeindehaus",BUS,50
 263001,Waldstraße,8.49014,49.52827,STATION,518581,8489296,49529017,Mannheim,"Waldhof Waldstraße",TRAM;BUS,150
 411811,Händelstraße,8.655534,49.548637,STATION,511236,8655318,49548227,Weinheim,Händelstraße,TRAM;BUS;ON_DEMAND,50
 246905,TÜV,8.50437,49.498,STATION,508184,8504308,49497906,Mannheim,TÜV,BUS,50
@@ -1164,7 +1165,6 @@ stop_id,stop_name,stop_lon,stop_lat,location_type,location_id,location_lon,locat
 236502,"Hessische Straße",8.49641,49.51567,STATION,511084,8496289,49515506,Mannheim,"Käfertal Hessische Straße",TRAM,50
 213405,Hoheneckenstraße,8.426555,49.456669,STATION,508373,8426659,49456699,"Ludwigshafen am Rhein","Mundenheim Hoheneckenstraße",TRAM;BUS,50
 213406,Hoheneckenstraße,8.426946,49.457146,STATION,508373,8426659,49456699,"Ludwigshafen am Rhein","Mundenheim Hoheneckenstraße",TRAM;BUS,100
-236501,"Hessische Straße",8.49619,49.51518,STATION,511084,8496289,49515506,Mannheim,"Käfertal Hessische Straße",TRAM,50
 213401,Hoheneckenstraße,8.426889,49.457178,STATION,508373,8426659,49456699,"Ludwigshafen am Rhein","Mundenheim Hoheneckenstraße",TRAM;BUS,100
 213402,Hoheneckenstraße,8.426623,49.456639,STATION,508373,8426659,49456699,"Ludwigshafen am Rhein","Mundenheim Hoheneckenstraße",TRAM;BUS,50
 259606,Schwabenstraße,8.56757,49.46263,STATION,509724,8567574,49462641,Mannheim,"Seckenheim Schwabenstraße",BUS,50
@@ -2068,4 +2068,4 @@ stop_id,stop_name,stop_lon,stop_lat,location_type,location_id,location_lon,locat
 117402,Marstallstr.,8.70586,49.41335,STATION,506938,8705388,49413290,Heidelberg,Marstallstraße,BUS,50
 252001,Maimarkt,8.522668,49.470345,STATION,508708,8522421,49469410,Mannheim,"Neuostheim Maimarkt",TRAM;BUS,150
 117401,Marstallstr.,8.7057,49.41329,STATION,506938,8705388,49413290,Heidelberg,Marstallstraße,BUS,50
-217106,"Oppau Gemeindehaus",8.403949,49.521716,STATION,508976,8404141,49521601,"Ludwigshafen am Rhein","Oppau Gemeindehaus",BUS,50
+236501,"Hessische Straße",8.49619,49.51518,STATION,511084,8496289,49515506,Mannheim,"Käfertal Hessische Straße",TRAM,50

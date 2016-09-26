@@ -17,7 +17,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class QueryDescriptionCsvWriter {
 
-//    final CsvMapper mapper = new CsvMapper();
     private final CsvMapper objectMapper;
     private final CsvSchema schema;
     {

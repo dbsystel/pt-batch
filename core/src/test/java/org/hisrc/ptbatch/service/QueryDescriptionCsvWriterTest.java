@@ -36,7 +36,7 @@ public class QueryDescriptionCsvWriterTest {
         }
         final String result = sw.toString();
         // System.out.println(result);
-        assertEquals(122, result.length());
+        assertEquals(134, result.length());
     }
 
 }
