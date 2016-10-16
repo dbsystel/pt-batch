@@ -15,8 +15,13 @@ import de.schildbach.pte.dto.Trip;
 
 @JsonPropertyOrder({ "query_id", "query_date_time", "query_from_id", "query_from_name",
                 "query_from_lon", "query_from_lat", "query_to_id", "query_to_name", "query_to_lon",
-                "query_to_lat", "trip_first_departure_date_time", "trip_last_arrival_date_time",
-                "trip_legs_count" })
+                "query_to_lat",
+                "least_duration_trip_first_departure_date_time",
+                "least_duration_trip_last_arrival_date_time",
+                "least_duration_trip_legs_count",
+                "least_changes_trip_first_departure_date_time",
+                "least_changes_trip_last_arrival_date_time",
+                "least_changes_trip_legs_count"})
 public class BriefTripDescriptionDto {
 
     @JsonProperty("query_id")
@@ -41,13 +46,21 @@ public class BriefTripDescriptionDto {
     @JsonProperty("query_to_lat")
     private final double toLat;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @JsonProperty("trip_first_departure_date_time")
-    private final LocalDateTime firstDepartureDateTime;
+    @JsonProperty("least_duration_trip_first_departure_date_time")
+    private final LocalDateTime leastDurationTripFirstDepartureDateTime;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @JsonProperty("trip_last_arrival_date_time")
-    private final LocalDateTime lastArrivalDateTime;
-    @JsonProperty("trip_legs_count")
-    private final int legsCount;
+    @JsonProperty("least_duration_trip_last_arrival_date_time")
+    private final LocalDateTime leastDurationTripLastArrivalDateTime;
+    @JsonProperty("least_duration_trip_legs_count")
+    private final int leastDurationTripLegsCount;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonProperty("least_changes_trip_first_departure_date_time")
+    private final LocalDateTime leastChangesTripFirstDepartureDateTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonProperty("least_changes_trip_last_arrival_date_time")
+    private final LocalDateTime leastChangesTripLastArrivalDateTime;
+    @JsonProperty("least_changes_trip_legs_count")
+    private final int leastChangesTripLegsCount;
 
     @JsonCreator
     public BriefTripDescriptionDto(@JsonProperty("query_id") String id,
@@ -60,9 +73,12 @@ public class BriefTripDescriptionDto {
                     @JsonProperty("query_to_name") String toName,
                     @JsonProperty("query_to_lon") double toLon,
                     @JsonProperty("query_to_lat") double toLat,
-                    @JsonProperty("trip_first_departure_date_time") LocalDateTime firstDepartureDateTime,
-                    @JsonProperty("trip_last_arrival_date_time") LocalDateTime lastArrivalDateTime,
-                    @JsonProperty("trip_legs_count") int legsCount) {
+                    @JsonProperty("least_duration_trip_first_departure_date_time") LocalDateTime leastDurationTripFirstDepartureDateTime,
+                    @JsonProperty("least_duration_trip_last_arrival_date_time") LocalDateTime leastDurationTripLastArrivalDateTime,
+                    @JsonProperty("least_duration_trip_legs_count") int leastDurationTripLegsCount,
+                    @JsonProperty("least_changes_trip_first_departure_date_time") LocalDateTime leastChangesTripFirstDepartureDateTime,
+                    @JsonProperty("least_changes_trip_last_arrival_date_time") LocalDateTime leastChangesTripLastArrivalDateTime,
+                    @JsonProperty("least_changes_trip_legs_count") int leastChangesTripLegsCount) {
         this.id = id;
         this.dateTime = dateTime;
         this.fromId = fromId;
@@ -73,9 +89,12 @@ public class BriefTripDescriptionDto {
         this.toName = toName;
         this.toLon = toLon;
         this.toLat = toLat;
-        this.firstDepartureDateTime = firstDepartureDateTime;
-        this.lastArrivalDateTime = lastArrivalDateTime;
-        this.legsCount = legsCount;
+        this.leastDurationTripFirstDepartureDateTime = leastDurationTripFirstDepartureDateTime;
+        this.leastDurationTripLastArrivalDateTime = leastDurationTripLastArrivalDateTime;
+        this.leastDurationTripLegsCount = leastDurationTripLegsCount;
+        this.leastChangesTripFirstDepartureDateTime = leastChangesTripFirstDepartureDateTime;
+        this.leastChangesTripLastArrivalDateTime = leastChangesTripLastArrivalDateTime;
+        this.leastChangesTripLegsCount = leastChangesTripLegsCount;
     }
 
     public String getId() {
@@ -118,23 +137,35 @@ public class BriefTripDescriptionDto {
         return toLat;
     }
 
-    public LocalDateTime getFirstDepartureDateTime() {
-        return firstDepartureDateTime;
+    public LocalDateTime getLeastDurationTripFirstDepartureDateTime() {
+        return leastDurationTripFirstDepartureDateTime;
     }
 
-    public LocalDateTime getLastArrivalDateTime() {
-        return lastArrivalDateTime;
+    public LocalDateTime getLeastDurationTripLastArrivalDateTime() {
+        return leastDurationTripLastArrivalDateTime;
     }
 
-    public int getLegsCount() {
-        return legsCount;
+    public int getLeastDurationTripLegsCount() {
+        return leastDurationTripLegsCount;
+    }
+    
+    public LocalDateTime getLeastChangesTripFirstDepartureDateTime() {
+        return leastChangesTripFirstDepartureDateTime;
+    }
+    
+    public LocalDateTime getLeastChangesTripLastArrivalDateTime() {
+        return leastChangesTripLastArrivalDateTime;
+    }
+    
+    public int getLeastChangesTripLegsCount() {
+        return leastChangesTripLegsCount;
     }
 
     public static Object of(TripDescription value) {
-        return of(value.getQuery(), value.getTrip());
+        return of(value.getQuery(), value.getLeastDurationTrip(), value.getLeastChangesTrip());
     }
 
-    public static BriefTripDescriptionDto of(QueryDescription queryDescription, Trip trip) {
+    public static BriefTripDescriptionDto of(QueryDescription queryDescription, Trip leastDurationTrip, Trip leastChangesTrip) {
         return new BriefTripDescriptionDto(queryDescription.getId(), queryDescription.getDateTime(),
                         queryDescription.getFrom().getId(), queryDescription.getFrom().getName(),
                         queryDescription.getFrom().getLon(), queryDescription.getFrom().getLat(),
@@ -142,12 +173,20 @@ public class BriefTripDescriptionDto {
                         queryDescription.getTo().getLon(), queryDescription.getTo().getLat(),
                         LocalDateTime.ofInstant(
                                         Instant.ofEpochMilli(
-                                                        trip.getFirstDepartureTime().getTime()),
+                                                        leastDurationTrip.getFirstDepartureTime().getTime()),
                                         ZoneId.systemDefault()),
                         LocalDateTime.ofInstant(
-                                        Instant.ofEpochMilli(trip.getLastArrivalTime().getTime()),
+                                        Instant.ofEpochMilli(leastDurationTrip.getLastArrivalTime().getTime()),
                                         ZoneId.systemDefault()),
-                        trip.legs.size());
+                        leastDurationTrip.legs.size(),
+                        LocalDateTime.ofInstant(
+                                        Instant.ofEpochMilli(
+                                                        leastChangesTrip.getFirstDepartureTime().getTime()),
+                                        ZoneId.systemDefault()),
+                        LocalDateTime.ofInstant(
+                                        Instant.ofEpochMilli(leastChangesTrip.getLastArrivalTime().getTime()),
+                                        ZoneId.systemDefault()),
+                        leastChangesTrip.legs.size());
     }
 
 }

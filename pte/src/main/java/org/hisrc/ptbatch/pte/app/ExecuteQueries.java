@@ -129,15 +129,22 @@ public class ExecuteQueries {
                     }
 
                     try {
-                        final Trip trip = providerService.findTripWithEarliestArrival(dateTime,
+                        final Trip tripWithLeastDuration = providerService.findTripWithLeastDuration(dateTime,
                                         from, to);
-                        if (trip == null) {
-                            LOGGER.warn("Could not find connection between [{}] and [{}] on [{}].",
+                        if (tripWithLeastDuration == null) {
+                            LOGGER.warn("Could not find least duration connection between [{}] and [{}] on [{}].",
                                             from, to, dateTime);
                             return null;
-                        } else {
-                            return new TripDescription(queryDescription, trip);
                         }
+                        final Trip tripWithLeastChangesDuration = providerService.findTripWithLeastChanges(dateTime,
+                                        from, to);
+                        if (tripWithLeastChangesDuration == null) {
+                            LOGGER.warn("Could not find least changes connection between [{}] and [{}] on [{}].",
+                                            from, to, dateTime);
+                            return null;
+                        }
+                         return new TripDescription(queryDescription, tripWithLeastDuration, tripWithLeastChangesDuration);
+                        
                     } catch (IOException ioex) {
                         LOGGER.warn("Error querying for connection between [{}] and [{}] on [{}].",
                                         from, to, dateTime, ioex);

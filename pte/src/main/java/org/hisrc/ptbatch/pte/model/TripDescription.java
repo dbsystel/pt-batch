@@ -8,18 +8,25 @@ public class TripDescription {
     
     private final QueryDescription query;
     
-    private final Trip trip;
+    private final Trip leastDurationTrip;
 
-    public TripDescription(QueryDescription query, Trip trip) {
+    private final Trip leastChangesTrip;
+
+    public TripDescription(QueryDescription query, Trip leastDurationTrip, Trip leastChangesTrip) {
         this.query = query;
-        this.trip = trip;
+        this.leastDurationTrip = leastDurationTrip;
+        this.leastChangesTrip = leastChangesTrip;
     }
 
     public QueryDescription getQuery() {
         return query;
     }
     
-    public Trip getTrip() {
-        return trip;
+    public Trip getLeastDurationTrip() {
+        return leastDurationTrip;
+    }
+    
+    public Trip getLeastChangesTrip() {
+        return leastChangesTrip;
     }
 }

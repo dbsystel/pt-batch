@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.function.Function;
 
 import org.hisrc.ptbatch.model.StopDescription;
 import org.hisrc.ptbatch.pte.model.StopLocationMapping;
+import org.hisrc.ptbatch.util.LonLatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +35,7 @@ public abstract class AbstractNetworkProviderService {
 
     private static final double MULTIPLIER = 1000000;
     private static final int MAX_DISTANCE = 1000;
-    private static final int INITIAL_DISTANCE = 50;
-    private static final int DISTANCE_INCREMENT = 50;
+    private static final int MAX_NUMBER_OF_LOCATIONS = 16;
     private static final Logger LOGGER = LoggerFactory
                     .getLogger(AbstractNetworkProviderService.class);
 
@@ -44,15 +45,30 @@ public abstract class AbstractNetworkProviderService {
         this.networkProvider = networkProvider;
     }
 
-    public Trip findTripWithEarliestArrival(LocalDateTime dateTime, Location from, Location to)
+    public Trip findTripWithLeastDuration(LocalDateTime dateTime, Location from, Location to)
                     throws IOException {
+        final List<Trip> trips = new ArrayList<>(findTrips(Optimize.LEAST_DURATION, dateTime, from, to));
+        Collections.sort(trips,  Comparator.<Trip, Long>comparing(trip -> trip.getDuration()).thenComparing(trip -> trip.legs.size()));
+        return trips.isEmpty() ? null : trips.get(0);
+    }
+    
+    public Trip findTripWithLeastChanges(LocalDateTime dateTime, Location from, Location to)
+                    throws IOException {
+        final List<Trip> trips = new ArrayList<>(findTrips(Optimize.LEAST_CHANGES, dateTime, from, to));
+        Collections.sort(trips, Comparator.<Trip, Integer>comparing(trip -> trip.legs.size()).thenComparing(trip -> trip.getDuration()));
+        return trips.isEmpty() ? null : trips.get(0);
+    }
+    
+
+    private Collection<Trip> findTrips(Optimize optimize, LocalDateTime dateTime,
+                    Location from, Location to) throws IOException {
         final Instant instant = dateTime.atZone(ZoneId.systemDefault()).toInstant();
         final Date date = Date.from(instant);
 
         final Function<NetworkProvider, QueryTripsResult> query = networkProvider -> {
             try {
                 final QueryTripsResult result = networkProvider.queryTrips(from, null, to, date,
-                                true, Product.ALL, Optimize.LEAST_DURATION, WalkSpeed.NORMAL,
+                                true, Product.ALL, optimize, WalkSpeed.NORMAL,
                                 Accessibility.NEUTRAL, null);
                 return result;
             } catch (IOException ioex) {
@@ -61,27 +77,14 @@ public abstract class AbstractNetworkProviderService {
         };
         final Function<QueryTripsResult, Boolean> statusCheck = result -> result.status != QueryTripsResult.Status.SERVICE_DOWN;
         final QueryTripsResult result = execute(query, statusCheck);
-        if (result.trips == null || result.trips.isEmpty()) {
-            return null;
+        if (result.trips == null) {
+            return Collections.emptyList();
         } else {
-            final List<Trip> trips = new ArrayList<>(result.trips);
-            Collections.sort(trips, Comparator.comparing(Trip::getLastArrivalTime));
-            return trips.get(0);
+            return result.trips;
         }
     }
 
     public StopLocationMapping resolveStopLocationMapping(StopDescription stop) throws IOException {
-
-        int distance = INITIAL_DISTANCE;
-        StopLocationMapping mapping = null;
-        do {
-            mapping = resolveStop(stop, distance);
-            distance = distance + DISTANCE_INCREMENT;
-        } while (mapping == null && distance <= MAX_DISTANCE);
-        return mapping;
-    }
-
-    private StopLocationMapping resolveStop(StopDescription stop, int distance) throws IOException {
         final Function<NetworkProvider, NearbyLocationsResult> query = networkProvider -> {
             try {
                 final NearbyLocationsResult result = this.networkProvider.queryNearbyLocations(
@@ -89,7 +92,7 @@ public abstract class AbstractNetworkProviderService {
                                 new Location(LocationType.COORD, null,
                                                 toIntCoordinate(stop.getLat()),
                                                 toIntCoordinate(stop.getLon())),
-                                distance, 16);
+                                MAX_DISTANCE, MAX_NUMBER_OF_LOCATIONS);
                 return result;
             } catch (IOException ioex) {
                 throw new RuntimeException(ioex);
@@ -114,7 +117,9 @@ public abstract class AbstractNetworkProviderService {
         }
         if (!locations.isEmpty()) {
             final Location location = locations.get(0);
-            return new StopLocationMapping(stop, location, distance);
+            final int distance1 = (int) Math.round(LonLatUtils.distance(stop.getLon(),
+                            stop.getLat(), location.getLonAsDouble(), location.getLatAsDouble()));
+            return new StopLocationMapping(stop, location, distance1);
         } else {
             return null;
         }

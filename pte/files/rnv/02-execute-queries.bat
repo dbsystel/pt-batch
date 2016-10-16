@@ -1,0 +1,1 @@
+java -cp ../../target/pt-batch-pte-1.0.0-SNAPSHOT.jar org.hisrc.ptbatch.pte.app.ExecuteQueries -slm-csv stop-location-mappings.csv -q-csv queries.csv -t-csv trips.csv -t-json trips

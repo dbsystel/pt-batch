@@ -1,1 +1,0 @@
-java -cp ../target/pt-batch-pte-1.0.0-SNAPSHOT.jar org.hisrc.ptbatch.pte.app.GenerateQueries -slm-csv rnv-stop-location-mappings.csv -c 1000 -s 2016-10-01 -e 2016-10-11 -q-csv rnv-queries.csv -q-json rnv-queries.json

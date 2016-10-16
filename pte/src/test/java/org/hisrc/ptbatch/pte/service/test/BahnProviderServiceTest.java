@@ -43,7 +43,7 @@ public class BahnProviderServiceTest {
     @Test
     public void findsTripWithEarliestArrival() throws IOException {
 
-        Trip trip = bahnProviderService.findTripWithEarliestArrival(
+        Trip trip = bahnProviderService.findTripWithLeastDuration(
                         LocalDateTime.parse("2016-10-01T00:33:00"),
                         new Location(LocationType.STATION, "508176", 49489186, 8462472, "Mannheim",
                                         "Rathaus/Reiss-Museum",
