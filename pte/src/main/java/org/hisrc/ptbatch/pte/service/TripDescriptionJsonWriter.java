@@ -1,7 +1,16 @@
 package org.hisrc.ptbatch.pte.service;
 
+import static java.time.temporal.ChronoField.HOUR_OF_DAY;
+import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
+import static java.time.temporal.ChronoField.NANO_OF_SECOND;
+import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
+
 import java.io.File;
 import java.io.IOException;
+import java.time.chrono.IsoChronology;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.ResolverStyle;
 import java.util.function.Consumer;
 
 import org.hisrc.ptbatch.pte.model.TripDescription;
@@ -19,12 +28,17 @@ public class TripDescriptionJsonWriter {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
+    public static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter
+                    .ofPattern("yyyyMMdd-HHmm");
+
     public Consumer<TripDescription> writer(File directory) throws IOException {
         return tripDescription -> {
 
             final String fromName = tripDescription.getQuery().getFrom().getName();
             final String toName = tripDescription.getQuery().getTo().getName();
             final String unsafeName = tripDescription.getQuery().getId() + "-"
+                            + tripDescription.getQuery().getDateTime()
+                                            .format(LOCAL_DATE_TIME_FORMATTER) + "-"
                             + (fromName == null ? "unknown" : fromName) + "-"
                             + (toName == null ? "unknown" : toName);
             final String safeName = FilenameUtils.toFileSystemSafeName(unsafeName, false, 255);
