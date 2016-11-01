@@ -1,0 +1,1 @@
+java -cp ../../../target/pt-batch-pte-1.0.0-SNAPSHOT.jar org.hisrc.ptbatch.pte.app.GenerateQueries -slm-csv ../stop-location-mappings.csv -c 1000 -s 2016-11-01 -e 2016-11-30 -o LEAST_DURATION -q-csv queries.csv -q-json queries.json

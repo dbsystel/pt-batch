@@ -1,0 +1,1 @@
+java -cp ../../target/pt-batch-pte-1.0.0-SNAPSHOT.jar org.hisrc.ptbatch.pte.app.GenerateStopLocationMappings -g vbb.zip -slm-csv stop-location-mappings.csv
