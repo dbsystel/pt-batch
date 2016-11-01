@@ -7,6 +7,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import org.hisrc.ptbatch.args4j.spi.LocalDateOptionHandler;
+import org.hisrc.ptbatch.model.Optimization;
 import org.hisrc.ptbatch.model.QueryDescription;
 import org.hisrc.ptbatch.service.GtfsReader;
 import org.hisrc.ptbatch.service.QueryDescriptionCsvWriter;
@@ -39,6 +40,10 @@ public class GenerateQueries {
                         "--end-date" }, metaVar = "END_DATE", usage = "End date (yyyy-MM-dd) for query generation, inclusive, last day of the START_DATE month by default", handler = LocalDateOptionHandler.class)
         private LocalDate endDate = null;
 
+        @Option(name = "-o", aliases = {
+        "--optimization" }, metaVar = "OPTIMIZATION", usage = "Optimization setting for queries (LEAST_DURATION, LEAST_CHANGES, LEAST_WALKING), LEAST_DURATION by default")
+        private Optimization optimization = Optimization.LEAST_DURATION;
+
         @Option(name = "-csv", aliases = {
                         "--csv-file" }, metaVar = "CSV_FILE", usage = "Output CSV file, queries.csv by default")
         private File csvFile = new File("queries.csv");
@@ -65,6 +70,10 @@ public class GenerateQueries {
 
         public LocalDate getEndDate() {
             return endDate != null ? endDate : startDate.with(TemporalAdjusters.lastDayOfMonth());
+        }
+        
+        public Optimization getOptimization() {
+            return optimization;
         }
 
         public File getCsvFile() {
@@ -97,7 +106,7 @@ public class GenerateQueries {
         final QueryGenerator queryGenerator = new QueryGenerator(gtfsReader);
         final List<QueryDescription> queryDescriptions = queryGenerator.generateQueries(
                         configuration.getCount(), configuration.getStartDate(),
-                        configuration.getEndDate());
+                        configuration.getEndDate(), configuration.getOptimization());
 
         if (configuration.getJsonFile() != null) {
             new QueryDescriptionJsonWriter().write(queryDescriptions,

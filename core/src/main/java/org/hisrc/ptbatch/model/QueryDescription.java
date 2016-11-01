@@ -1,6 +1,7 @@
 package org.hisrc.ptbatch.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,29 +11,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class QueryDescription {
 
+    private static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter
+                    .ofPattern("yyyyMMdd-HHmm");
+
     private String id;
     private LocalDateTime dateTime;
     private StopDescription from;
     private StopDescription to;
+    private Optimization optimization;
 
     public QueryDescription(@JsonProperty("dateTime") LocalDateTime dateTime,
                     @JsonProperty("from") StopDescription from,
-                    @JsonProperty("to") StopDescription to) {
-        this.id = StringUtils.leftPad(Integer.toHexString(Objects.hash(dateTime, from, to)), 8, '0');
-        this.dateTime = dateTime;
-        this.from = from;
-        this.to = to;
+                    @JsonProperty("to") StopDescription to,
+                    @JsonProperty("optimization") Optimization optimization) {
+        this(LOCAL_DATE_TIME_FORMATTER.format(dateTime) + "-" + from.getId() + "---" + to.getId(),
+                        dateTime, from, to, optimization);
     }
 
     @JsonCreator
     public QueryDescription(@JsonProperty("id") String id,
                     @JsonProperty("dateTime") LocalDateTime dateTime,
                     @JsonProperty("from") StopDescription from,
-                    @JsonProperty("to") StopDescription to) {
+                    @JsonProperty("to") StopDescription to,
+                    @JsonProperty("optimization") Optimization optimization) {
         this.id = id;
         this.dateTime = dateTime;
         this.from = from;
         this.to = to;
+        this.optimization = optimization;
     }
 
     public String getId() {
@@ -51,15 +57,19 @@ public class QueryDescription {
         return to;
     }
 
+    public Optimization getOptimization() {
+        return optimization;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(id, dateTime, from, to);
+        return Objects.hash(id, dateTime, from, to, optimization);
     }
 
     @Override
     public String toString() {
         return "QueryDescription [id=" + id + ", dateTime=" + dateTime + ", from=" + from + ", to="
-                        + to + "]";
+                        + to + ", optimization=" + optimization + "]";
     }
 
     @Override
@@ -72,7 +82,8 @@ public class QueryDescription {
             return false;
         final QueryDescription that = (QueryDescription) object;
         return Objects.equals(this.id, that.id) && Objects.equals(this.dateTime, that.dateTime)
-                        && Objects.equals(this.from, that.from) && Objects.equals(this.to, that.to);
+                        && Objects.equals(this.from, that.from) && Objects.equals(this.to, that.to)
+                        && Objects.equals(this.optimization, that.optimization);
     }
 
     public static QueryDescription of(QueryDescriptionDto dto) {
@@ -80,6 +91,7 @@ public class QueryDescription {
                         new StopDescription(dto.getFromId(), dto.getFromName(), dto.getFromLon(),
                                         dto.getFromLat()),
                         new StopDescription(dto.getToId(), dto.getToName(), dto.getToLon(),
-                                        dto.getToLat()));
+                                        dto.getToLat()),
+                        dto.getOptimization());
     }
 }

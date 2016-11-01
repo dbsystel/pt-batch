@@ -6,6 +6,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.hisrc.ptbatch.model.Optimization;
 import org.hisrc.ptbatch.model.QueryDescription;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class QueryGeneratorServiceTest {
     @Test
     public void generatesQueries() {
         final List<QueryDescription> generatedQueryDescriptions = queryGenerator
-                        .generateQueries(10, LocalDate.now(), LocalDate.now().plusMonths(1));
+                        .generateQueries(10, LocalDate.now(), LocalDate.now().plusMonths(1), Optimization.LEAST_DURATION);
         assertEquals(10, generatedQueryDescriptions.size());
     }
 

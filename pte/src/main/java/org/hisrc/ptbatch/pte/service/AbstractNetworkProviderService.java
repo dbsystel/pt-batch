@@ -13,7 +13,9 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.hisrc.ptbatch.model.Optimization;
 import org.hisrc.ptbatch.model.StopDescription;
 import org.hisrc.ptbatch.pte.model.StopLocationMapping;
 import org.hisrc.ptbatch.util.LonLatUtils;
@@ -45,23 +47,47 @@ public abstract class AbstractNetworkProviderService {
         this.networkProvider = networkProvider;
     }
 
-    public Trip findTripWithLeastDuration(LocalDateTime dateTime, Location from, Location to)
-                    throws IOException {
-        final List<Trip> trips = new ArrayList<>(findTrips(Optimize.LEAST_DURATION, dateTime, from, to));
-        Collections.sort(trips,  Comparator.<Trip, Long>comparing(trip -> trip.getDuration()).thenComparing(trip -> trip.legs.size()));
+    public Trip findTrip(LocalDateTime dateTime, Location from, Location to,
+                    Optimization optimization) throws IOException {
+        final List<Trip> trips = new ArrayList<>(
+                        findTrips(optimization(optimization), dateTime, from, to));
+        Collections.sort(trips, comparator(optimization));
         return trips.isEmpty() ? null : trips.get(0);
     }
-    
-    public Trip findTripWithLeastChanges(LocalDateTime dateTime, Location from, Location to)
-                    throws IOException {
-        final List<Trip> trips = new ArrayList<>(findTrips(Optimize.LEAST_CHANGES, dateTime, from, to));
-        Collections.sort(trips, Comparator.<Trip, Integer>comparing(trip -> trip.legs.size()).thenComparing(trip -> trip.getDuration()));
-        return trips.isEmpty() ? null : trips.get(0);
-    }
-    
 
-    private Collection<Trip> findTrips(Optimize optimize, LocalDateTime dateTime,
-                    Location from, Location to) throws IOException {
+    private Comparator<Trip> comparator(Optimization optimization) {
+        switch (optimization) {
+        case LEAST_CHANGES:
+            return Comparator.<Trip, Integer>comparing(trip -> trip.legs.size())
+                            .thenComparing(trip -> trip.getDuration());
+        case LEAST_DURATION:
+            return Comparator.<Trip, Long>comparing(trip -> trip.getDuration())
+                            .thenComparing(trip -> trip.legs.size());
+        case LEAST_WALKING:
+            // TODO this is not quite corrct
+            return Comparator.<Trip, Long>comparing(trip -> trip.getDuration())
+                            .thenComparing(trip -> trip.legs.size());
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private Optimize optimization(Optimization optimization) {
+        switch (optimization) {
+        case LEAST_CHANGES:
+            return Optimize.LEAST_CHANGES;
+        case LEAST_DURATION:
+            return Optimize.LEAST_DURATION;
+        case LEAST_WALKING:
+            return Optimize.LEAST_WALKING;
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private Collection<Trip> findTrips(Optimize optimize, LocalDateTime dateTime, Location from,
+                    Location to) throws IOException {
+        final long timestamp = dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         final Instant instant = dateTime.atZone(ZoneId.systemDefault()).toInstant();
         final Date date = Date.from(instant);
 
@@ -80,7 +106,9 @@ public abstract class AbstractNetworkProviderService {
         if (result.trips == null) {
             return Collections.emptyList();
         } else {
-            return result.trips;
+            // This is needed because bahn.de uses a substracts buffer of 10 minutes from the start time,
+            // so it can deliver trips departing earlier.
+            return result.trips.stream().filter(trip -> trip.getFirstDepartureTime().getTime() >= timestamp).collect(Collectors.toList());
         }
     }
 

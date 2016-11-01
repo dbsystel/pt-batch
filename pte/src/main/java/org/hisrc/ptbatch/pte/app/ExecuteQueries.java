@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.hisrc.ptbatch.model.Optimization;
 import org.hisrc.ptbatch.model.QueryDescription;
 import org.hisrc.ptbatch.model.StopDescription;
 import org.hisrc.ptbatch.pte.model.StopLocationMapping;
@@ -117,6 +118,7 @@ public class ExecuteQueries {
                     final LocalDateTime dateTime = queryDescription.getDateTime();
                     final Location from = stopLocationMap.get(queryDescription.getFrom());
                     final Location to = stopLocationMap.get(queryDescription.getTo());
+                    final Optimization optimization = queryDescription.getOptimization();
                     if (from == null) {
                         LOGGER.warn("Could not find \"from\" location [{}].",
                                         queryDescription.getFrom());
@@ -129,21 +131,14 @@ public class ExecuteQueries {
                     }
 
                     try {
-                        final Trip tripWithLeastDuration = providerService.findTripWithLeastDuration(dateTime,
-                                        from, to);
-                        if (tripWithLeastDuration == null) {
-                            LOGGER.warn("Could not find least duration connection between [{}] and [{}] on [{}].",
-                                            from, to, dateTime);
+                        final Trip trip = providerService.findTrip(dateTime,
+                                        from, to, optimization);
+                        if (trip == null) {
+                            LOGGER.warn("Could not find connection between [{}] and [{}] on [{}] optimized by [{}].",
+                                            from, to, dateTime, optimization);
                             return null;
                         }
-                        final Trip tripWithLeastChangesDuration = providerService.findTripWithLeastChanges(dateTime,
-                                        from, to);
-                        if (tripWithLeastChangesDuration == null) {
-                            LOGGER.warn("Could not find least changes connection between [{}] and [{}] on [{}].",
-                                            from, to, dateTime);
-                            return null;
-                        }
-                         return new TripDescription(queryDescription, tripWithLeastDuration, tripWithLeastChangesDuration);
+                         return new TripDescription(queryDescription, trip);
                         
                     } catch (IOException ioex) {
                         LOGGER.warn("Error querying for connection between [{}] and [{}] on [{}].",

@@ -7,6 +7,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import org.hisrc.ptbatch.args4j.spi.LocalDateOptionHandler;
+import org.hisrc.ptbatch.model.Optimization;
 import org.hisrc.ptbatch.model.QueryDescription;
 import org.hisrc.ptbatch.pte.model.StopLocationMapping;
 import org.hisrc.ptbatch.pte.service.QueryGenerator;
@@ -35,7 +36,11 @@ public class GenerateQueries {
         @Option(name = "-e", aliases = {
                         "--end-date" }, metaVar = "END_DATE", usage = "End date (yyyy-MM-dd) for query generation, inclusive, last day of the START_DATE month by default", handler = LocalDateOptionHandler.class)
         private LocalDate endDate = null;
-
+        
+        @Option(name = "-o", aliases = {
+        "--optimization" }, metaVar = "OPTIMIZATION", usage = "Optimization setting for queries (LEAST_DURATION, LEAST_CHANGES, LEAST_WALKING), LEAST_DURATION by default")
+        private Optimization optimization = Optimization.LEAST_DURATION;
+        
         @Option(name = "-slm-csv", aliases = {
                         "--stop-location-mappings-csv-file" }, metaVar = "STOP_LOCATION_MAPPINGS_CSV_FILE", usage = "Stop/locations mappings CSV file, stop-location-mappings.csv by default")
         private File stopLocationMappingsCsvFile = new File("stop-location-mappings.csv");
@@ -62,6 +67,10 @@ public class GenerateQueries {
 
         public LocalDate getEndDate() {
             return endDate != null ? endDate : startDate.with(TemporalAdjusters.lastDayOfMonth());
+        }
+        
+        public Optimization getOptimization() {
+            return optimization;
         }
 
         public File getStopLocationMappingsCsvFile() {
@@ -104,7 +113,7 @@ public class GenerateQueries {
         final QueryGenerator queryGenerator = new QueryGenerator();
         final List<QueryDescription> queryDescriptions = queryGenerator.generateQueries(
                         stopLocationMappings, configuration.getCount(),
-                        configuration.getStartDate(), configuration.getEndDate());
+                        configuration.getStartDate(), configuration.getEndDate(), configuration.getOptimization());
 
         if (configuration.getQueriesJsonFile() != null) {
             new QueryDescriptionJsonWriter().write(queryDescriptions,

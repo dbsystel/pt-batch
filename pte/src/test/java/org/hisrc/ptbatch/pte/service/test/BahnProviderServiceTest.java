@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import org.hisrc.ptbatch.model.Optimization;
 import org.hisrc.ptbatch.model.StopDescription;
 import org.hisrc.ptbatch.pte.model.StopLocationMapping;
 import org.hisrc.ptbatch.pte.service.BahnProviderService;
@@ -43,8 +44,7 @@ public class BahnProviderServiceTest {
     @Test
     public void findsTripWithEarliestArrival() throws IOException {
 
-        Trip trip = bahnProviderService.findTripWithLeastDuration(
-                        LocalDateTime.parse("2016-10-01T00:33:00"),
+        Trip trip = bahnProviderService.findTrip(LocalDateTime.parse("2016-10-01T00:33:00"),
                         new Location(LocationType.STATION, "508176", 49489186, 8462472, "Mannheim",
                                         "Rathaus/Reiss-Museum",
                                         new HashSet<Product>(
@@ -52,7 +52,8 @@ public class BahnProviderServiceTest {
                         new Location(LocationType.STATION, "508010", 49487784, 8426506,
                                         "Ludwigshafen am Rhein", "Heinrich-Ries-Halle",
                                         new HashSet<Product>(
-                                                        Arrays.asList(Product.TRAM, Product.BUS))));
+                                                        Arrays.asList(Product.TRAM, Product.BUS))),
+                        Optimization.LEAST_DURATION);
 
         LocalDateTime firstDepartureDateTime = LocalDateTime.ofInstant(
                         Instant.ofEpochMilli(trip.getFirstDepartureTime().getTime()),

@@ -32,6 +32,8 @@ public class QueryDescriptionDto {
     private final double toLon;
     @JsonProperty("to_lat")
     private final double toLat;
+    @JsonProperty("optimization")
+    private final Optimization optimization;
 
     @JsonCreator
     public QueryDescriptionDto(
@@ -44,7 +46,8 @@ public class QueryDescriptionDto {
                     @JsonProperty("to_id") String toId,
                     @JsonProperty("to_name") String toName,
                     @JsonProperty("to_lon") double toLon,
-                    @JsonProperty("to_lat") double toLat) {
+                    @JsonProperty("to_lat") double toLat,
+                    @JsonProperty("optimization") Optimization optimization) {
         this.id = id;
         this.dateTime = dateTime;
         this.fromId = fromId;
@@ -55,6 +58,7 @@ public class QueryDescriptionDto {
         this.toName = toName;
         this.toLon = toLon;
         this.toLat = toLat;
+        this.optimization = optimization;
     }
     
     public String getId() {
@@ -96,6 +100,10 @@ public class QueryDescriptionDto {
     public double getToLat() {
         return toLat;
     }
+    
+    public Optimization getOptimization() {
+        return optimization;
+    }
 
     public static QueryDescriptionDto of(QueryDescription queryDescription) {
         return new QueryDescriptionDto(
@@ -104,7 +112,8 @@ public class QueryDescriptionDto {
                         queryDescription.getFrom().getId(), queryDescription.getFrom().getName(),
                         queryDescription.getFrom().getLon(), queryDescription.getFrom().getLat(),
                         queryDescription.getTo().getId(), queryDescription.getTo().getName(),
-                        queryDescription.getTo().getLon(), queryDescription.getTo().getLat());
+                        queryDescription.getTo().getLon(), queryDescription.getTo().getLat(),
+                        queryDescription.getOptimization());
     }
 
 }

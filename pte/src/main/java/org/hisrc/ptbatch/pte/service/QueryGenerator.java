@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.hisrc.ptbatch.model.Optimization;
 import org.hisrc.ptbatch.model.QueryDescription;
 import org.hisrc.ptbatch.model.StopDescription;
 import org.hisrc.ptbatch.pte.model.StopLocationMapping;
@@ -22,7 +23,7 @@ public class QueryGenerator {
     private static final int MAX_DISTANCE = 50;
 
     public List<QueryDescription> generateQueries(List<StopLocationMapping> stopLocationMappings,
-                    int count, LocalDate startDate, LocalDate endDate) {
+                    int count, LocalDate startDate, LocalDate endDate, Optimization optimization) {
         final List<QueryDescription> queryDescriptions = new ArrayList<>(count);
         final List<StopDescription> stopDescriptions = stopLocationMappings.stream().filter(
                         stopLocationMapping -> stopLocationMapping.getDistance() <= MAX_DISTANCE)
@@ -38,7 +39,7 @@ public class QueryGenerator {
                             firstStopDescription);
             final LocalDateTime dateTime = selectRandomDateTime(startDate, endDate);
             final QueryDescription queryDescription = new QueryDescription(dateTime,
-                            firstStopDescription, secondStopDescription);
+                            firstStopDescription, secondStopDescription, optimization);
             queryDescriptions.add(queryDescription);
         }
         Collections.sort(queryDescriptions, Comparator.comparing(QueryDescription::getDateTime));

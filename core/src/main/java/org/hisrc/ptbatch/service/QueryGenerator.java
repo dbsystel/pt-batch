@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.hisrc.ptbatch.model.StopDescription;
+import org.hisrc.ptbatch.model.Optimization;
 import org.hisrc.ptbatch.model.QueryDescription;
 import org.onebusaway.gtfs.model.Stop;
 
@@ -24,7 +25,7 @@ public class QueryGenerator {
     }
 
     public List<QueryDescription> generateQueries(int count, LocalDate startDate,
-                    LocalDate endDate) {
+                    LocalDate endDate, Optimization optimization) {
         final List<QueryDescription> queryDescriptions = new ArrayList<>(count);
         final List<Stop> stops = new ArrayList<>(gtfsReader.getStops());
         for (int index = 0; index < count; index++) {
@@ -34,7 +35,7 @@ public class QueryGenerator {
             final StopDescription secondStopDescription = StopDescription.of(secondStop);
             final LocalDateTime dateTime = selectRandomDateTime(startDate, endDate);
             final QueryDescription queryDescription = new QueryDescription(dateTime, firstStopDescription,
-                            secondStopDescription);
+                            secondStopDescription, optimization);
             queryDescriptions.add(queryDescription);
         }
         Collections.sort(queryDescriptions, Comparator.comparing(QueryDescription::getDateTime));
